@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     compileOnly("org.bukkit:bukkit:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("com.github.azbh111:craftbukkit-1.8.8:R")
 
     shadow("org.jetbrains.kotlin:kotlin-stdlib")
 
@@ -30,7 +31,7 @@ tasks.test {
 
 tasks.named<ShadowJar>("shadowJar") {
     manifest {
-        attributes(mapOf("Main-Class" to "$group/Plugin"))
+        attributes(mapOf("Main-Class" to "$group/server/Plugin"))
     }
 
     archiveBaseName.set("mcpk-testing")
