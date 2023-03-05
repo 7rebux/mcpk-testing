@@ -1,0 +1,21 @@
+package de.nosswald.server.listener
+
+import de.nosswald.api.PlayerData
+import de.nosswald.server.ServerState
+
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
+
+object ConnectionListener : Listener {
+    @EventHandler
+    fun onConnect(event: PlayerJoinEvent) {
+        ServerState.activePlayers.add(PlayerData(event.player.uniqueId))
+    }
+
+    @EventHandler
+    fun onDisconnect(event: PlayerQuitEvent) {
+        ServerState.activePlayers.removeIf { it.playerId == event.player.uniqueId }
+    }
+}

@@ -1,4 +1,9 @@
 name: mcpk-testing
 author: Rebux
 version: 1.0.0
-main: de.nosswald.Plugin
+main: de.nosswald.server.Plugin
+commands:
+  practice:
+    aliases:
+      - prac
+    description: Toggle practice mode
