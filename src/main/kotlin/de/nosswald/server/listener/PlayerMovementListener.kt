@@ -2,7 +2,6 @@ package de.nosswald.server.listener
 
 import de.nosswald.server.ServerState
 import de.nosswald.server.commands.PracticeCommand
-import de.nosswald.api.utils.TickCounter
 
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
@@ -22,7 +21,7 @@ object PlayerMovementListener : Listener {
         val player = event.player
         val playerData = ServerState.getPlayerData(player.uniqueId)
 
-        TickCounter.tick(event.player.uniqueId)
+        playerData.practiceData.timer.tick()
 
         if (playerData.practiceData.enabled) {
             if (event.hasMoved() && !playerData.practiceData.timer.started)

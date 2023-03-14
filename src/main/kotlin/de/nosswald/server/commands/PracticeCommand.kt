@@ -36,7 +36,7 @@ object PracticeCommand : CommandExecutor {
         player.gameMode = GameMode.CREATIVE
 
         player.sendMessage("${ChatColor.RED}Disabled practice mode after " +
-                "${ChatColor.DARK_RED}${TickTimeFormatter(ticks).format("ss.SSS")} " +
+                "${ChatColor.DARK_RED}${TickTimeFormatter.format(ticks)} " +
                 "${ChatColor.RED}seconds")
     }
 

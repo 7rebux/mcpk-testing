@@ -12,6 +12,6 @@ data class PlayerData(val playerId: UUID) {
         val playerId: UUID,
         var enabled: Boolean = false,
         var location: Location? = null,
-        var timer: TickCounter = TickCounter(playerId),
+        var timer: TickCounter = TickCounter(),
     )
 }
