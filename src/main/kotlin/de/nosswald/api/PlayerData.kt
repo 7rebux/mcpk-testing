@@ -6,12 +6,18 @@ import org.bukkit.Location
 import java.util.UUID
 
 data class PlayerData(val playerId: UUID) {
-    val practiceData = PracticeData(playerId)
+    val practiceData = PracticeData()
+    val parkourData = ParkourData()
 
     data class PracticeData(
-        val playerId: UUID,
         var enabled: Boolean = false,
         var location: Location? = null,
+        var timer: TickCounter = TickCounter(),
+    )
+
+    data class ParkourData(
+        var enabled: Boolean = false,
+        var parkour: Parkour? = null,
         var timer: TickCounter = TickCounter(),
     )
 }

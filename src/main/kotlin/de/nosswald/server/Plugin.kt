@@ -2,10 +2,8 @@ package de.nosswald.server
 
 import de.nosswald.api.PlayerData
 import de.nosswald.api.utils.TickTimeFormatter
-import de.nosswald.server.commands.FacingCommand
-import de.nosswald.server.commands.PracticeCommand
-import de.nosswald.server.listener.ConnectionListener
-import de.nosswald.server.listener.PlayerMovementListener
+import de.nosswald.server.commands.*
+import de.nosswald.server.listener.*
 import net.minecraft.server.v1_8_R3.IChatBaseComponent
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat
 import org.bukkit.Bukkit
@@ -21,12 +19,14 @@ class Plugin : JavaPlugin() {
     override fun onEnable() {
         registerListeners(
             ConnectionListener,
-            PlayerMovementListener,
+            MovementListener,
+            ParkourFinishListener,
         )
 
         registerCommands(mapOf(
             "practice" to PracticeCommand,
             "facing" to FacingCommand,
+            "parkour" to ParkourCommand,
         ))
 
         Timer().scheduleAtFixedRate(object: TimerTask() {

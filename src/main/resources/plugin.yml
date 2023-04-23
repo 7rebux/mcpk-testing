@@ -12,3 +12,15 @@ commands:
       - f
     usage: /facing <yaw> (<pitch>)
     description: Set precise facing
+  parkour:
+    aliases:
+      - pk
+      - jumpandrun
+      - jnr
+    usage: >
+      /parkour start <id>
+      /parkour leave
+      /parkour add <name> <builder> <difficulty> <resetHeight>
+      /parkour remove <id>
+      /parkour list
+    description: Manage parkour
