@@ -39,7 +39,7 @@ object PracticeCommand : CommandExecutor {
         player.sendMessage("${ChatColor.RED}Disabled practice mode after ${ChatColor.DARK_RED}${TickTimeFormatter.format(ticks)}")
     }
 
-    private fun Location.format() = "(X=${"%.3f".format(this.x)}, Y=${"%.3f".format(this.y)}, Z=${"%.3f".format(this.z)}, F=(${"%.3f".format(this.pitch)}, ${"%.3f".format(this.yaw)}))"
+    private fun Location.format() = "(X=${"%.3f".format(this.x)}, Y=${"%.3f".format(this.y)}, Z=${"%.3f".format(this.z)}, F=(${"%.3f".format(this.yaw)}, ${"%.3f".format(this.pitch)}))"
 
     override fun onCommand(
         sender: CommandSender,
@@ -49,7 +49,7 @@ object PracticeCommand : CommandExecutor {
     ): Boolean {
         if (sender !is Player) {
             sender.sendMessage("${ChatColor.RED}This command can only be run as a player")
-            return false
+            return true
         }
 
         if (ServerState.getPlayerData(sender.uniqueId).practiceData.enabled)

@@ -2,6 +2,7 @@ package de.nosswald.server
 
 import de.nosswald.api.PlayerData
 import de.nosswald.api.utils.TickTimeFormatter
+import de.nosswald.server.commands.FacingCommand
 import de.nosswald.server.commands.PracticeCommand
 import de.nosswald.server.listener.ConnectionListener
 import de.nosswald.server.listener.PlayerMovementListener
@@ -25,6 +26,7 @@ class Plugin : JavaPlugin() {
 
         registerCommands(mapOf(
             "practice" to PracticeCommand,
+            "facing" to FacingCommand,
         ))
 
         Timer().scheduleAtFixedRate(object: TimerTask() {

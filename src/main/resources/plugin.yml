@@ -7,3 +7,8 @@ commands:
     aliases:
       - prac
     description: Toggle practice mode
+  facing:
+    aliases:
+      - f
+    usage: /facing <yaw> (<pitch>)
+    description: Set precise facing
