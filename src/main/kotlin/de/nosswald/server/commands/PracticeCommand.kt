@@ -5,6 +5,7 @@ import de.nosswald.api.utils.TickTimeFormatter
 
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
+import org.bukkit.Location
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -19,10 +20,10 @@ object PracticeCommand : CommandExecutor {
 
         player.gameMode = GameMode.ADVENTURE
 
-        player.sendMessage("${ChatColor.GREEN}Enabled practice mode")
+        player.sendMessage("${ChatColor.GREEN}Enabled practice mode at ${ChatColor.DARK_GREEN}${player.location.format()}")
     }
 
-    fun disablePracticeMode(player: Player) {
+    private fun disablePracticeMode(player: Player) {
         val practiceData = ServerState.getPlayerData(player.uniqueId).practiceData
         val ticks = practiceData.timer.stop()
 
@@ -35,10 +36,10 @@ object PracticeCommand : CommandExecutor {
 
         player.gameMode = GameMode.CREATIVE
 
-        player.sendMessage("${ChatColor.RED}Disabled practice mode after " +
-                "${ChatColor.DARK_RED}${TickTimeFormatter.format(ticks)} " +
-                "${ChatColor.RED}seconds")
+        player.sendMessage("${ChatColor.RED}Disabled practice mode after ${ChatColor.DARK_RED}${TickTimeFormatter.format(ticks)}")
     }
+
+    private fun Location.format() = "(X=${"%.3f".format(this.x)}, Y=${"%.3f".format(this.y)}, Z=${"%.3f".format(this.z)}, F=(${"%.3f".format(this.pitch)}, ${"%.3f".format(this.yaw)}))"
 
     override fun onCommand(
         sender: CommandSender,

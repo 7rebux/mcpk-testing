@@ -1,10 +1,8 @@
 package de.nosswald.server.listener
 
+import de.nosswald.api.PlayerData
 import de.nosswald.server.ServerState
-import de.nosswald.server.commands.PracticeCommand
 
-import org.bukkit.Material
-import org.bukkit.block.BlockFace
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerMoveEvent
@@ -14,22 +12,19 @@ import org.bukkit.event.player.PlayerMoveEvent
  * This requires a modified spigot.jar file to work properly
  */
 object PlayerMovementListener : Listener {
-    private val FINISH_MATERIAL = Material.EMERALD_BLOCK
-
     @EventHandler
     fun onPlayerMove(event: PlayerMoveEvent) {
-        val player = event.player
-        val playerData = ServerState.getPlayerData(player.uniqueId)
+        val playerData = ServerState.getPlayerData(event.player.uniqueId)
 
-        playerData.practiceData.timer.tick()
+        if (playerData.practiceData.enabled) handlePracticeMode(event, playerData.practiceData)
+    }
 
-        if (playerData.practiceData.enabled) {
-            if (event.hasMoved() && !playerData.practiceData.timer.started)
-                playerData.practiceData.timer.start()
-
-            if (player.location.block.getRelative(BlockFace.DOWN).type == FINISH_MATERIAL)
-                PracticeCommand.disablePracticeMode(player)
-        }
+    private fun handlePracticeMode(
+        event: PlayerMoveEvent,
+        data: PlayerData.PracticeData
+    ) {
+        if (event.hasMoved() && !data.timer.started) data.timer.start()
+        if (data.timer.started) data.timer.tick()
     }
 
     /**
