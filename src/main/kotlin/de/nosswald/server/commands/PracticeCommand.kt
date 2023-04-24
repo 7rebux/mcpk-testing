@@ -2,10 +2,10 @@ package de.nosswald.server.commands
 
 import de.nosswald.server.ServerState
 import de.nosswald.api.utils.TickTimeFormatter
+import de.nosswald.api.utils.facing
 
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
-import org.bukkit.Location
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -20,7 +20,12 @@ object PracticeCommand : CommandExecutor {
 
         player.gameMode = GameMode.ADVENTURE
 
-        player.sendMessage("${ChatColor.GREEN}Enabled practice mode at ${ChatColor.DARK_GREEN}${player.location.format()}")
+        player.sendMessage("${ChatColor.GREEN}Enabled practice mode")
+        player.sendMessage("  ${ChatColor.DARK_GREEN}➥ X: ${ChatColor.WHITE}${"%.3f".format(player.location.x)}")
+        player.sendMessage("  ${ChatColor.DARK_GREEN}➥ Y: ${ChatColor.WHITE}${"%.3f".format(player.location.y)}")
+        player.sendMessage("  ${ChatColor.DARK_GREEN}➥ Z: ${ChatColor.WHITE}${"%.3f".format(player.location.z)}")
+        player.sendMessage("  ${ChatColor.DARK_GREEN}➥ Direction: ${ChatColor.WHITE}${player.location.facing()}")
+        player.sendMessage("  ${ChatColor.DARK_GREEN}➥ Facing: ${ChatColor.WHITE}${"%.3f".format(player.location.yaw)} / ${"%.3f".format(player.location.pitch)}")
     }
 
     private fun disablePracticeMode(player: Player) {
@@ -38,8 +43,6 @@ object PracticeCommand : CommandExecutor {
 
         player.sendMessage("${ChatColor.RED}Disabled practice mode after ${ChatColor.DARK_RED}${TickTimeFormatter.format(ticks)}")
     }
-
-    private fun Location.format() = "(X=${"%.3f".format(this.x)}, Y=${"%.3f".format(this.y)}, Z=${"%.3f".format(this.z)}, F=(${"%.3f".format(this.yaw)}, ${"%.3f".format(this.pitch)}))"
 
     override fun onCommand(
         sender: CommandSender,

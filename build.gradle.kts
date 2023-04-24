@@ -23,6 +23,8 @@ dependencies {
     shadow("org.jetbrains.kotlin:kotlin-stdlib")
 
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.1.0")
+    testImplementation("org.bukkit:bukkit:1.8.8-R0.1-SNAPSHOT")
+    testImplementation("com.github.azbh111:craftbukkit-1.8.8:R")
     testImplementation(kotlin("test"))
 }
 
