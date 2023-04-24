@@ -36,13 +36,16 @@ class Plugin : JavaPlugin() {
                         return
 
                     val playerData = ServerState.getPlayerData(player.uniqueId)
+                    var bar = ""
 
-                    if (playerData.practiceData.enabled) {
-                        val bar = "${TickTimeFormatter.format(playerData.practiceData.timer.ticks)}"
+                    if (playerData.parkourData.enabled)
+                        bar += "Parkour: ${TickTimeFormatter.format(playerData.parkourData.timer.ticks)}"
 
-                        (player as CraftPlayer).handle.playerConnection
-                            .sendPacket(PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a("{\"text\":\"$bar\"}"), 2))
-                    }
+                    if (playerData.practiceData.enabled)
+                        bar += " Practice: ${TickTimeFormatter.format(playerData.practiceData.timer.ticks)}"
+
+                    if (bar != "")
+                        (player as CraftPlayer).handle.playerConnection.sendPacket(PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a("{\"text\":\"$bar\"}"), 2))
                 }
             }
         }, 0, 1)

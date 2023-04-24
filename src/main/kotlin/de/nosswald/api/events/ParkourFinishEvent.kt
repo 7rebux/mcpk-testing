@@ -1,10 +1,12 @@
 package de.nosswald.api.events
 
+import de.nosswald.api.Parkour
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 class ParkourFinishEvent(
+    val parkour: Parkour,
     val player: Player,
     val ticks: Long
 ) : Event() {

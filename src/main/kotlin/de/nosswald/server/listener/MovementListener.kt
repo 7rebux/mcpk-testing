@@ -38,7 +38,10 @@ object MovementListener : Listener {
         data: PlayerData.ParkourData
     ) {
         if (event.player.getBlocksStandingOn().map(Block::getType).any { it == Material.EMERALD_BLOCK })
-            Bukkit.getServer().pluginManager.callEvent(ParkourFinishEvent(event.player, data.timer.stop()))
+            Bukkit.getServer().pluginManager.callEvent(ParkourFinishEvent(data.parkour!!, event.player, data.timer.stop()))
+
+        if (event.player.location.y <= data.parkour!!.resetHeight)
+            event.player.teleport(data.parkour!!.location)
 
         if (event.hasMoved() && !data.timer.started) data.timer.start()
         if (data.timer.started) data.timer.tick()

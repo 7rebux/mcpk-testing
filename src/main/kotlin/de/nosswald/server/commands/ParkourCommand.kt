@@ -4,6 +4,7 @@ import de.nosswald.api.Parkour
 import de.nosswald.server.ParkourManager
 import de.nosswald.server.ServerState
 import org.bukkit.ChatColor
+import org.bukkit.GameMode
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -37,8 +38,9 @@ object ParkourCommand : CommandExecutor {
                         }
 
                         sender.teleport(it.location)
+                        sender.gameMode = GameMode.ADVENTURE
                         sender.sendMessage("Started parkour")
-                    } ?: sender.sendMessage("Parkour ${id} not found!")
+                    } ?: sender.sendMessage("Parkour $id not found!")
                 } ?: sender.sendMessage("Missing id")
             }
             "leave" -> { // parkour leave
@@ -55,6 +57,8 @@ object ParkourCommand : CommandExecutor {
                         this.parkour = null
                     }
                     data.timer.stop()
+
+                    sender.gameMode = GameMode.CREATIVE
 
                     sender.sendMessage("Left parkour")
                 } else sender.sendMessage("Not in a parkour")

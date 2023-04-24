@@ -13,6 +13,9 @@ data class PlayerData(val playerId: UUID) {
         var enabled: Boolean = false,
         var location: Location? = null,
         var timer: TickCounter = TickCounter(),
+        val config: Map<String, Any> = mapOf(
+            "resetHeight" to 70,
+        )
     )
 
     data class ParkourData(
