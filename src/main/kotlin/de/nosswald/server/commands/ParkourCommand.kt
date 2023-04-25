@@ -1,9 +1,10 @@
 package de.nosswald.server.commands
 
 import de.nosswald.api.Parkour
+import de.nosswald.server.Instance
 import de.nosswald.server.ParkourManager
-import de.nosswald.server.ServerState
-import org.bukkit.ChatColor
+import de.nosswald.server.utils.MessageTemplate
+import de.nosswald.server.utils.sendTemplate
 import org.bukkit.GameMode
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -25,12 +26,12 @@ object ParkourCommand : CommandExecutor {
                     val parkour = ParkourManager.parkours.firstOrNull { it.id == id.toInt() }
 
                     if (sender !is Player) {
-                        sender.sendMessage("${ChatColor.RED}This command can only be run as a player")
+                        sender.sendTemplate(MessageTemplate("commands.errors.playersOnly"))
                         return true
                     }
 
                     parkour?.let {
-                        val data = ServerState.getPlayerData(sender.uniqueId).parkourData
+                        val data = Instance.plugin.getPlayerData(sender.uniqueId).parkourData
 
                         data.apply {
                             this.enabled = true
@@ -39,17 +40,22 @@ object ParkourCommand : CommandExecutor {
 
                         sender.teleport(it.location)
                         sender.gameMode = GameMode.ADVENTURE
-                        sender.sendMessage("Started parkour")
-                    } ?: sender.sendMessage("Parkour $id not found!")
-                } ?: sender.sendMessage("Missing id")
+
+                        sender.sendTemplate(MessageTemplate("commands.parkour.start.success", mapOf(
+                            "name" to parkour.name,
+                            "difficulty" to parkour.difficulty,
+                            "builder" to parkour.builder.joinToString(", ")
+                        )))
+                    } ?: sender.sendTemplate(MessageTemplate("commands.parkour.badId", mapOf("id" to id)))
+                } ?: sender.sendTemplate(MessageTemplate("commands.parkour.noId"))
             }
             "leave" -> { // parkour leave
                 if (sender !is Player) {
-                    sender.sendMessage("${ChatColor.RED}This command can only be run as a player")
+                    sender.sendTemplate(MessageTemplate("commands.errors.playersOnly"))
                     return true
                 }
 
-                val data = ServerState.getPlayerData(sender.uniqueId).parkourData
+                val data = Instance.plugin.getPlayerData(sender.uniqueId).parkourData
 
                 if (data.enabled) {
                     data.apply {
@@ -60,16 +66,21 @@ object ParkourCommand : CommandExecutor {
 
                     sender.gameMode = GameMode.CREATIVE
 
-                    sender.sendMessage("Left parkour")
-                } else sender.sendMessage("Not in a parkour")
+                    sender.sendTemplate(MessageTemplate("commands.parkour.leave.success"))
+                } else sender.sendTemplate(MessageTemplate("commands.parkour.leave.noParkour"))
             }
             "list" -> { // parkour list
                 if (ParkourManager.parkours.isEmpty())
-                    sender.sendMessage("No existing parkours")
+                    sender.sendTemplate(MessageTemplate("commands.parkour.list.empty"))
 
-                ParkourManager.parkours
-                    .map(Parkour::toString)
-                    .forEach(sender::sendMessage)
+                ParkourManager.parkours.forEach {
+                    sender.sendTemplate(MessageTemplate("commands.parkour.list.entry", mapOf(
+                        "id" to it.id,
+                        "name" to it.name,
+                        "difficulty" to it.difficulty,
+                        "builder" to it.builder.joinToString(", ")
+                    )))
+                }
             }
             "add" -> { // parkour add <name> <builder> <difficulty> <resetHeight>
                 val id = ParkourManager.parkours.maxOfOrNull(Parkour::id)?.plus(1) ?: 0
@@ -79,25 +90,37 @@ object ParkourCommand : CommandExecutor {
                 val resetHeight = args.getOrNull(4)?.let(String::toInt)
 
                 if (sender !is Player) {
-                    sender.sendMessage("${ChatColor.RED}This command can only be run as a player")
+                    sender.sendTemplate(MessageTemplate("commands.errors.playersOnly"))
                     return true
                 }
 
-                ParkourManager.parkours.add(Parkour(
+                val parkour = Parkour(
                     id,
                     name ?: "Unnamed",
                     builder ?: listOf("Unknown"),
                     difficulty ?: Parkour.Difficulty.MEDIUM,
                     sender.location,
                     resetHeight ?: (sender.location.blockY - 10)
-                ))
-                sender.sendMessage("Added parkour")
+                )
+                ParkourManager.parkours.add(parkour)
+
+                sender.sendTemplate(MessageTemplate("commands.parkour.add.success", mapOf(
+                    "name" to parkour.name,
+                    "id" to parkour.id
+                )))
             }
             "remove" -> { // parkour remove <id>
                 args.getOrNull(1)?.let { id ->
-                    val success = ParkourManager.parkours.removeIf { it.id == id.toInt() }
-                    sender.sendMessage(if (success) "Removed $id" else "Not found")
-                } ?: sender.sendMessage("Missing id")
+                    val parkour = ParkourManager.parkours.firstOrNull { it.id == id.toInt() }
+
+                    parkour?.let {
+                        ParkourManager.parkours.remove(it)
+                        sender.sendTemplate(MessageTemplate("commands.parkour.remove.success", mapOf(
+                            "name" to it.name,
+                            "id" to it.id
+                        )))
+                    } ?: sender.sendTemplate(MessageTemplate("commands.parkour.badId"))
+                } ?: sender.sendTemplate(MessageTemplate("commands.parkour.noId"))
             }
             else -> return false
         }

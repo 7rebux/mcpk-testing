@@ -16,6 +16,12 @@ import java.util.*
 // Sadly this can't be an object due to bukkit implementation
 @Suppress("unused")
 class Plugin : JavaPlugin() {
+    private val instance = Instance(this)
+    val activePlayers = mutableListOf<PlayerData>()
+
+    fun getPlayerData(uuid: UUID) =
+        activePlayers.find { it.playerId == uuid } ?: error("Player data not found for $uuid")
+
     override fun onEnable() {
         registerListeners(
             ConnectionListener,
@@ -32,10 +38,10 @@ class Plugin : JavaPlugin() {
         Timer().scheduleAtFixedRate(object: TimerTask() {
             override fun run() {
                 Bukkit.getOnlinePlayers().forEach { player ->
-                    if (player.uniqueId !in ServerState.activePlayers.map(PlayerData::playerId))
+                    if (player.uniqueId !in activePlayers.map(PlayerData::playerId))
                         return
 
-                    val playerData = ServerState.getPlayerData(player.uniqueId)
+                    val playerData = getPlayerData(player.uniqueId)
                     var bar = ""
 
                     if (playerData.parkourData.enabled)

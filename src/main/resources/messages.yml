@@ -1,0 +1,37 @@
+parkour:
+  finish: '§aFinished {name} in {time} {unit}'
+commands:
+  errors:
+    playersOnly: 'You must be a player to use this command!'
+  parkour:
+    noId: '§cMissing parkour id!'
+    badId: '§cParkour with id {id} could not be found!'
+    start:
+      success: |-
+        §aStarted {name}:
+          §2➥ Difficulty: §f{difficulty}
+          §2➥ Builder: §f{builder}
+    leave:
+      success: '§cLeft parkour'
+      noParkour: '§cNot in a parkour!'
+    list:
+      empty: '§cNo existing parkours!'
+      entry: '#{id}: {name} - {difficulty} by {builder}'
+    add:
+      success: '§aAdded parkour {name} with id {id}'
+    remove:
+      success: '§aRemoved parkour {name} with id {id}'
+  facing:
+    updated: |-
+      §aUpdated facing:
+        §2➥ Direction: §f{direction} 
+        §2➥ Facing: §f{yaw} / {pitch}
+  practice:
+    enabled: |-
+      §aEnabled practice mode:
+        §2➥ X: §f{x}
+        §2➥ Y: §f{y}
+        §2➥ Z: §f{z}
+        §2➥ Direction: §f{direction} 
+        §2➥ Facing: §f{yaw} / {pitch}
+    disabled: '§cDisabled practice mode after {time} {unit}'

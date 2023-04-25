@@ -1,10 +1,11 @@
 package de.nosswald.server.commands
 
-import de.nosswald.server.ServerState
 import de.nosswald.api.utils.TickTimeFormatter
 import de.nosswald.api.utils.facing
+import de.nosswald.server.Instance
+import de.nosswald.server.utils.MessageTemplate
+import de.nosswald.server.utils.sendTemplate
 
-import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -13,24 +14,26 @@ import org.bukkit.entity.Player
 
 object PracticeCommand : CommandExecutor {
     private fun enablePracticeMode(player: Player) {
-        ServerState.getPlayerData(player.uniqueId).practiceData.apply {
+        Instance.plugin.getPlayerData(player.uniqueId).practiceData.apply {
             enabled = true
             location = player.location
         }
 
         player.gameMode = GameMode.ADVENTURE
 
-        player.sendMessage("${ChatColor.GREEN}Enabled practice mode")
-        player.sendMessage("  ${ChatColor.DARK_GREEN}➥ X: ${ChatColor.WHITE}${"%.3f".format(player.location.x)}")
-        player.sendMessage("  ${ChatColor.DARK_GREEN}➥ Y: ${ChatColor.WHITE}${"%.3f".format(player.location.y)}")
-        player.sendMessage("  ${ChatColor.DARK_GREEN}➥ Z: ${ChatColor.WHITE}${"%.3f".format(player.location.z)}")
-        player.sendMessage("  ${ChatColor.DARK_GREEN}➥ Direction: ${ChatColor.WHITE}${player.location.facing()}")
-        player.sendMessage("  ${ChatColor.DARK_GREEN}➥ Facing: ${ChatColor.WHITE}${"%.3f".format(player.location.yaw)} / ${"%.3f".format(player.location.pitch)}")
+        player.sendTemplate(MessageTemplate("commands.practice.enabled", mapOf(
+            "x" to "%.3f".format(player.location.x),
+            "y" to "%.3f".format(player.location.y),
+            "z" to "%.3f".format(player.location.z),
+            "direction" to player.location.facing(),
+            "yaw" to "%.3f".format(player.location.yaw),
+            "pitch" to "%.3f".format(player.location.pitch)
+        )))
     }
 
     private fun disablePracticeMode(player: Player) {
-        val practiceData = ServerState.getPlayerData(player.uniqueId).practiceData
-        val ticks = practiceData.timer.stop()
+        val practiceData = Instance.plugin.getPlayerData(player.uniqueId).practiceData
+        val (time, unit) = TickTimeFormatter.format(practiceData.timer.stop())
 
         player.teleport(practiceData.location)
 
@@ -41,7 +44,10 @@ object PracticeCommand : CommandExecutor {
 
         player.gameMode = GameMode.CREATIVE
 
-        player.sendMessage("${ChatColor.RED}Disabled practice mode after ${ChatColor.DARK_RED}${TickTimeFormatter.format(ticks)}")
+        player.sendTemplate(MessageTemplate("commands.practice.disabled", mapOf(
+            "time" to time,
+            "unit" to unit.toString().lowercase()
+        )))
     }
 
     override fun onCommand(
@@ -51,11 +57,11 @@ object PracticeCommand : CommandExecutor {
         args: Array<String>
     ): Boolean {
         if (sender !is Player) {
-            sender.sendMessage("${ChatColor.RED}This command can only be run as a player")
+            sender.sendTemplate(MessageTemplate("commands.errors.playersOnly"))
             return true
         }
 
-        if (ServerState.getPlayerData(sender.uniqueId).practiceData.enabled)
+        if (Instance.plugin.getPlayerData(sender.uniqueId).practiceData.enabled)
             disablePracticeMode(sender)
         else
             enablePracticeMode(sender)

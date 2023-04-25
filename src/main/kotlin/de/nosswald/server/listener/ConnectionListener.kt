@@ -1,7 +1,7 @@
 package de.nosswald.server.listener
 
 import de.nosswald.api.PlayerData
-import de.nosswald.server.ServerState
+import de.nosswald.server.Instance
 import org.bukkit.ChatColor
 
 import org.bukkit.event.EventHandler
@@ -14,13 +14,13 @@ object ConnectionListener : Listener {
     fun onConnect(event: PlayerJoinEvent) {
         event.joinMessage = "${ChatColor.GREEN}>> ${ChatColor.GRAY}${event.player.name}"
 
-        ServerState.activePlayers.add(PlayerData(event.player.uniqueId))
+        Instance.plugin.activePlayers.add(PlayerData(event.player.uniqueId))
     }
 
     @EventHandler
     fun onDisconnect(event: PlayerQuitEvent) {
         event.quitMessage = "${ChatColor.RED}<< ${ChatColor.GRAY}${event.player.name}"
 
-        ServerState.activePlayers.removeIf { it.playerId == event.player.uniqueId }
+        Instance.plugin.activePlayers.removeIf { it.playerId == event.player.uniqueId }
     }
 }

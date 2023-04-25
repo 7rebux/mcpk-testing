@@ -3,7 +3,7 @@ package de.nosswald.server.listener
 import de.nosswald.api.PlayerData
 import de.nosswald.api.events.ParkourFinishEvent
 import de.nosswald.api.utils.getBlocksStandingOn
-import de.nosswald.server.ServerState
+import de.nosswald.server.Instance
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.block.Block
@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerMoveEvent
 object MovementListener : Listener {
     @EventHandler
     fun onPlayerMove(event: PlayerMoveEvent) {
-        val playerData = ServerState.getPlayerData(event.player.uniqueId)
+        val playerData = Instance.plugin.getPlayerData(event.player.uniqueId)
 
         if (playerData.parkourData.enabled) handleParkourMode(event, playerData.parkourData)
         if (playerData.practiceData.enabled) handlePracticeMode(event, playerData.practiceData)

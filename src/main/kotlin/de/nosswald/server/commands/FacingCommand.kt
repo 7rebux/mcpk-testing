@@ -1,6 +1,8 @@
 package de.nosswald.server.commands
 
-import org.bukkit.ChatColor
+import de.nosswald.api.utils.facing
+import de.nosswald.server.utils.MessageTemplate
+import de.nosswald.server.utils.sendTemplate
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -17,7 +19,7 @@ object FacingCommand : CommandExecutor {
         val pitch = args.getOrNull(1)?.toFloat()
 
         if (sender !is Player) {
-            sender.sendMessage("${ChatColor.RED}This command can only be run as a player")
+            sender.sendTemplate(MessageTemplate("commands.errors.playersOnly"))
             return true
         }
 
@@ -26,7 +28,11 @@ object FacingCommand : CommandExecutor {
         yaw?.let { sender.teleport(sender.location.apply { this.yaw = it }) }
         pitch?.let { sender.teleport(sender.location.apply { this.pitch = it }) }
 
-        sender.sendMessage("${ChatColor.GREEN}Updated facing!")
+        sender.sendTemplate(MessageTemplate("commands.facing.updated", mapOf(
+            "direction" to sender.location.facing(),
+            "yaw" to "%.3f".format(sender.location.yaw),
+            "pitch" to "%.3f".format(sender.location.pitch),
+        )))
 
         return true
     }
