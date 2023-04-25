@@ -17,7 +17,7 @@ commands:
       - pk
       - jumpandrun
       - jnr
-    usage: >
+    usage: |-
       /parkour start <id>
       /parkour leave
       /parkour add <name> <builder> <difficulty> <resetHeight>
