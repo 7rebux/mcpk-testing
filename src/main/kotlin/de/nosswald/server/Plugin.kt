@@ -26,6 +26,7 @@ class Plugin : JavaPlugin() {
         registerListeners(
             ConnectionListener,
             MovementListener,
+            ParkourStartListener,
             ParkourFinishListener,
         )
 

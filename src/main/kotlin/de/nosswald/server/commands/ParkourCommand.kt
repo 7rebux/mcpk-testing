@@ -1,10 +1,12 @@
 package de.nosswald.server.commands
 
 import de.nosswald.api.Parkour
+import de.nosswald.api.events.ParkourStartEvent
 import de.nosswald.server.Instance
 import de.nosswald.server.ParkourManager
 import de.nosswald.server.utils.MessageTemplate
 import de.nosswald.server.utils.sendTemplate
+import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -31,24 +33,11 @@ object ParkourCommand : CommandExecutor {
                     }
 
                     parkour?.let {
-                        val data = Instance.plugin.getPlayerData(sender.uniqueId).parkourData
-
-                        data.apply {
-                            this.enabled = true
-                            this.parkour = parkour
-                        }
-
-                        sender.teleport(it.location)
-                        sender.gameMode = GameMode.ADVENTURE
-
-                        sender.sendTemplate(MessageTemplate("commands.parkour.start.success", mapOf(
-                            "name" to parkour.name,
-                            "difficulty" to parkour.difficulty,
-                            "builder" to parkour.builder.joinToString(", ")
-                        )))
+                        Bukkit.getServer().pluginManager.callEvent(ParkourStartEvent(it, sender))
                     } ?: sender.sendTemplate(MessageTemplate("commands.parkour.badId", mapOf("id" to id)))
                 } ?: sender.sendTemplate(MessageTemplate("commands.parkour.noId"))
             }
+            // TODO create an event & listener for this
             "leave" -> { // parkour leave
                 if (sender !is Player) {
                     sender.sendTemplate(MessageTemplate("commands.errors.playersOnly"))

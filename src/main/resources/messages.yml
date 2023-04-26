@@ -1,16 +1,15 @@
 parkour:
   finish: '§aFinished {name} in {time} {unit}'
+  start: |-
+    §aStarted {name}:
+      §2➥ Difficulty: §f{difficulty}
+      §2➥ Builder: §f{builder}
 commands:
   errors:
     playersOnly: 'You must be a player to use this command!'
   parkour:
     noId: '§cMissing parkour id!'
     badId: '§cParkour with id {id} could not be found!'
-    start:
-      success: |-
-        §aStarted {name}:
-          §2➥ Difficulty: §f{difficulty}
-          §2➥ Builder: §f{builder}
     leave:
       success: '§cLeft parkour'
       noParkour: '§cNot in a parkour!'
