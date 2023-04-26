@@ -17,4 +17,4 @@ out/
 !**/src/test/**/out/
 
 ### Server ###
-server/
+/server/
