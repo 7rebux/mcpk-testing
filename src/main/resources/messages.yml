@@ -5,6 +5,15 @@ parkour:
       §2➥ Builder: §f{builder}
   finish: '§aFinished {name} in {time} {unit}'
   leave: '§cLeft parkour'
+practice:
+  enabled: |-
+    §aEnabled practice mode:
+      §2➥ X: §f{x}
+      §2➥ Y: §f{y}
+      §2➥ Z: §f{z}
+      §2➥ Direction: §f{direction} 
+      §2➥ Facing: §f{yaw} / {pitch}
+  disabled: '§cDisabled practice mode after {time} {unit}'
 commands:
   errors:
     playersOnly: 'You must be a player to use this command!'
@@ -24,12 +33,3 @@ commands:
       §aUpdated facing:
         §2➥ Direction: §f{direction} 
         §2➥ Facing: §f{yaw} / {pitch}
-  practice:
-    enabled: |-
-      §aEnabled practice mode:
-        §2➥ X: §f{x}
-        §2➥ Y: §f{y}
-        §2➥ Z: §f{z}
-        §2➥ Direction: §f{direction} 
-        §2➥ Facing: §f{yaw} / {pitch}
-    disabled: '§cDisabled practice mode after {time} {unit}'

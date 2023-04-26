@@ -1,0 +1,59 @@
+package de.nosswald.server.listener
+
+import de.nosswald.api.events.PracticeDisableEvent
+import de.nosswald.api.events.PracticeEnableEvent
+import de.nosswald.api.utils.TickTimeFormatter
+import de.nosswald.api.utils.facing
+import de.nosswald.server.Instance
+import de.nosswald.server.utils.MessageTemplate
+import de.nosswald.server.utils.sendTemplate
+import org.bukkit.GameMode
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+
+object PracticeListener : Listener {
+    @EventHandler
+    fun onPracticeEnable(event: PracticeEnableEvent) {
+        val player = event.player
+        val data = Instance.plugin.getPlayerData(player.uniqueId).practiceData
+
+        data.apply {
+            this.enabled = true
+            this.location = player.location
+        }
+
+        player.gameMode = GameMode.ADVENTURE
+
+        player.sendTemplate(
+            MessageTemplate("practice.enabled", mapOf(
+            "x" to "%.3f".format(player.location.x),
+            "y" to "%.3f".format(player.location.y),
+            "z" to "%.3f".format(player.location.z),
+            "direction" to player.location.facing(),
+            "yaw" to "%.3f".format(player.location.yaw),
+            "pitch" to "%.3f".format(player.location.pitch)
+        ))
+        )
+    }
+
+    @EventHandler
+    fun onPracticeDisable(event: PracticeDisableEvent) {
+        val (time, unit) = TickTimeFormatter.format(event.ticks)
+        val player = event.player
+        val data = Instance.plugin.getPlayerData(player.uniqueId).practiceData
+
+        player.teleport(data.location)
+
+        data.apply {
+            this.enabled = false
+            this.location = null
+        }
+
+        player.gameMode = GameMode.CREATIVE
+
+        player.sendTemplate(MessageTemplate("practice.disabled", mapOf(
+            "time" to time,
+            "unit" to unit.toString().lowercase()
+        )))
+    }
+}
