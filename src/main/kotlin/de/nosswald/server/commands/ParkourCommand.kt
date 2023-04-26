@@ -1,13 +1,13 @@
 package de.nosswald.server.commands
 
 import de.nosswald.api.Parkour
+import de.nosswald.api.events.ParkourLeaveEvent
 import de.nosswald.api.events.ParkourStartEvent
 import de.nosswald.server.Instance
 import de.nosswald.server.ParkourManager
 import de.nosswald.server.utils.MessageTemplate
 import de.nosswald.server.utils.sendTemplate
 import org.bukkit.Bukkit
-import org.bukkit.GameMode
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -37,26 +37,16 @@ object ParkourCommand : CommandExecutor {
                     } ?: sender.sendTemplate(MessageTemplate("commands.parkour.badId", mapOf("id" to id)))
                 } ?: sender.sendTemplate(MessageTemplate("commands.parkour.noId"))
             }
-            // TODO create an event & listener for this
             "leave" -> { // parkour leave
                 if (sender !is Player) {
                     sender.sendTemplate(MessageTemplate("commands.errors.playersOnly"))
                     return true
                 }
 
-                val data = Instance.plugin.getPlayerData(sender.uniqueId).parkourData
-
-                if (data.enabled) {
-                    data.apply {
-                        this.enabled = false
-                        this.parkour = null
-                    }
-                    data.timer.stop()
-
-                    sender.gameMode = GameMode.CREATIVE
-
-                    sender.sendTemplate(MessageTemplate("commands.parkour.leave.success"))
-                } else sender.sendTemplate(MessageTemplate("commands.parkour.leave.noParkour"))
+                if (Instance.plugin.getPlayerData(sender.uniqueId).parkourData.enabled)
+                    Bukkit.getServer().pluginManager.callEvent(ParkourLeaveEvent(sender))
+                else
+                    sender.sendTemplate(MessageTemplate("commands.parkour.noParkour"))
             }
             "list" -> { // parkour list
                 if (ParkourManager.parkours.isEmpty())
