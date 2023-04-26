@@ -9,11 +9,12 @@ import de.nosswald.server.utils.MessageTemplate
 import de.nosswald.server.utils.sendTemplate
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
-import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object ParkourCommand : CommandExecutor {
+object ParkourCommand : ICommand {
+    override val name = "parkour"
+
     override fun onCommand(
         sender: CommandSender,
         command: Command,
@@ -27,10 +28,7 @@ object ParkourCommand : CommandExecutor {
                 args.getOrNull(1)?.let { id ->
                     val parkour = ParkourManager.parkours.firstOrNull { it.id == id.toInt() }
 
-                    if (sender !is Player) {
-                        sender.sendTemplate(MessageTemplate("commands.errors.playersOnly"))
-                        return true
-                    }
+                    if (sender !is Player) return sender.onlyPlayers()
 
                     parkour?.let {
                         Bukkit.getServer().pluginManager.callEvent(ParkourStartEvent(it, sender))
@@ -38,10 +36,7 @@ object ParkourCommand : CommandExecutor {
                 } ?: sender.sendTemplate(MessageTemplate("commands.parkour.noId"))
             }
             "leave" -> { // parkour leave
-                if (sender !is Player) {
-                    sender.sendTemplate(MessageTemplate("commands.errors.playersOnly"))
-                    return true
-                }
+                if (sender !is Player) return sender.onlyPlayers()
 
                 if (Instance.plugin.getPlayerData(sender.uniqueId).parkourData.enabled)
                     Bukkit.getServer().pluginManager.callEvent(ParkourLeaveEvent(sender))
@@ -68,10 +63,7 @@ object ParkourCommand : CommandExecutor {
                 val difficulty = args.getOrNull(3)?.let(Parkour.Difficulty::valueOf)
                 val resetHeight = args.getOrNull(4)?.let(String::toInt)
 
-                if (sender !is Player) {
-                    sender.sendTemplate(MessageTemplate("commands.errors.playersOnly"))
-                    return true
-                }
+                if (sender !is Player) return sender.onlyPlayers()
 
                 val parkour = Parkour(
                     id,

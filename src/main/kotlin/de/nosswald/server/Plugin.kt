@@ -7,7 +7,6 @@ import de.nosswald.server.listener.*
 import net.minecraft.server.v1_8_R3.IChatBaseComponent
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat
 import org.bukkit.Bukkit
-import org.bukkit.command.CommandExecutor
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
@@ -29,11 +28,11 @@ class Plugin : JavaPlugin() {
             ParkourListener,
         )
 
-        registerCommands(mapOf(
-            "practice" to PracticeCommand,
-            "facing" to FacingCommand,
-            "parkour" to ParkourCommand,
-        ))
+        registerCommands(
+            PracticeCommand,
+            FacingCommand,
+            ParkourCommand,
+        )
 
         Timer().scheduleAtFixedRate(object: TimerTask() {
             override fun run() {
@@ -60,6 +59,6 @@ class Plugin : JavaPlugin() {
     private fun registerListeners(vararg listeners: Listener) =
         listeners.forEach { server.pluginManager.registerEvents(it, this) }
 
-    private fun registerCommands(commands: Map<String, CommandExecutor>) =
-        commands.forEach { this.getCommand(it.key).executor = it.value }
+    private fun registerCommands(vararg commands: ICommand) =
+        commands.forEach { this.getCommand(it.name).executor = it }
 }

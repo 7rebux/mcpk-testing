@@ -8,11 +8,12 @@ import de.nosswald.server.utils.sendTemplate
 
 import org.bukkit.GameMode
 import org.bukkit.command.Command
-import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object PracticeCommand : CommandExecutor {
+object PracticeCommand : ICommand {
+    override val name = "practice"
+
     private fun enablePracticeMode(player: Player) {
         Instance.plugin.getPlayerData(player.uniqueId).practiceData.apply {
             enabled = true
@@ -56,10 +57,7 @@ object PracticeCommand : CommandExecutor {
         label: String,
         args: Array<String>
     ): Boolean {
-        if (sender !is Player) {
-            sender.sendTemplate(MessageTemplate("commands.errors.playersOnly"))
-            return true
-        }
+        if (sender !is Player) return sender.onlyPlayers()
 
         if (Instance.plugin.getPlayerData(sender.uniqueId).practiceData.enabled)
             disablePracticeMode(sender)
