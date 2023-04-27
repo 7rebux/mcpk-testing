@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
 // Sadly this can't be an object due to bukkit implementation
+// Important: This plugin requires a modified spigot.jar file to work properly
 @Suppress("unused")
 class Plugin : JavaPlugin() {
     private val instance = Instance(this)
@@ -24,7 +25,6 @@ class Plugin : JavaPlugin() {
     override fun onEnable() {
         registerListeners(
             ConnectionListener,
-            MovementListener,
             ParkourListener,
             PracticeListener,
         )

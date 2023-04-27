@@ -7,6 +7,7 @@ import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.util.NumberConversions
 
 fun AxisAlignedBB.blocksTouchingBaseFace(
@@ -38,3 +39,6 @@ fun Location.facing() = when (MathHelper.floor((this.yaw * 4.0F / 360.0F).toDoub
     2 -> "Z-"
     else -> "X+"
 }
+
+fun PlayerMoveEvent.hasMoved() =
+    this.from.x != this.to.x || this.from.y != this.to.y || this.from.z != this.to.z

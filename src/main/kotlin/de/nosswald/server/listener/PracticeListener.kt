@@ -4,14 +4,26 @@ import de.nosswald.api.events.PracticeDisableEvent
 import de.nosswald.api.events.PracticeEnableEvent
 import de.nosswald.api.utils.TickTimeFormatter
 import de.nosswald.api.utils.facing
+import de.nosswald.api.utils.hasMoved
 import de.nosswald.server.Instance
 import de.nosswald.server.utils.MessageTemplate
 import de.nosswald.server.utils.sendTemplate
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerMoveEvent
 
 object PracticeListener : Listener {
+    @EventHandler
+    fun onPlayerMove(event: PlayerMoveEvent) {
+        val data = Instance.plugin.getPlayerData(event.player.uniqueId).practiceData
+
+        if (!data.enabled) return
+
+        if (event.hasMoved() && !data.timer.started) data.timer.start()
+        if (data.timer.started) data.timer.tick()
+    }
+
     @EventHandler
     fun onPracticeEnable(event: PracticeEnableEvent) {
         val player = event.player
