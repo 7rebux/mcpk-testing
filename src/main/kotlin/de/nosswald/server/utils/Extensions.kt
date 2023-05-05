@@ -1,7 +1,11 @@
 package de.nosswald.server.utils
 
 import de.nosswald.server.config.MessagesConfig
+import net.minecraft.server.v1_8_R3.IChatBaseComponent
+import net.minecraft.server.v1_8_R3.PacketPlayOutChat
 import org.bukkit.command.CommandSender
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
+import org.bukkit.entity.Player
 
 data class MessageTemplate(
     val path: String,
@@ -26,4 +30,10 @@ fun CommandSender.sendTemplate(template: MessageTemplate) {
     template.get().forEach { message ->
         this.sendMessage(message)
     }
+}
+
+fun Player.sendActionBar(text: String) {
+    (this as CraftPlayer).handle.playerConnection.sendPacket(
+        PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a("{\"text\":\"$text\"}"), 2)
+    )
 }
