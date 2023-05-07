@@ -2,7 +2,7 @@ package de.nosswald.server.commands
 
 import de.nosswald.api.events.PracticeDisableEvent
 import de.nosswald.api.events.PracticeEnableEvent
-import de.nosswald.server.Instance
+import de.nosswald.server.utils.getData
 import org.bukkit.Bukkit
 
 import org.bukkit.command.Command
@@ -20,7 +20,7 @@ object PracticeCommand : ICommand {
     ): Boolean {
         if (sender !is Player) return sender.onlyPlayers()
 
-        val data = Instance.plugin.getPlayerData(sender.uniqueId).practiceData
+        val data = sender.getData().practiceData
 
         if (data.enabled)
             Bukkit.getPluginManager().callEvent(PracticeDisableEvent(sender, data.timer.stop()))

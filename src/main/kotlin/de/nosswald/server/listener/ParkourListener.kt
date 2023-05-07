@@ -6,8 +6,8 @@ import de.nosswald.api.events.ParkourStartEvent
 import de.nosswald.api.utils.TickTimeFormatter
 import de.nosswald.api.utils.getBlocksStandingOn
 import de.nosswald.api.utils.hasMoved
-import de.nosswald.server.Instance
 import de.nosswald.server.utils.MessageTemplate
+import de.nosswald.server.utils.getData
 import de.nosswald.server.utils.sendActionBar
 import de.nosswald.server.utils.sendTemplate
 import org.bukkit.Bukkit
@@ -23,12 +23,12 @@ object ParkourListener : Listener {
     @EventHandler
     fun onPlayerMove(event: PlayerMoveEvent) {
         val player = event.player
-        val data = Instance.plugin.getPlayerData(player.uniqueId).parkourData
+        val data = player.getData().parkourData
 
         if (!data.enabled) return
 
         // finish
-        if (player.getBlocksStandingOn().map(Block::getType).any { it == Material.EMERALD_BLOCK })
+        if (data.timer.started && player.getBlocksStandingOn().map(Block::getType).any { it == Material.EMERALD_BLOCK })
             Bukkit.getServer().pluginManager.callEvent(ParkourFinishEvent(data.parkour!!, player, data.timer.stop()))
 
         // reset height
@@ -48,7 +48,7 @@ object ParkourListener : Listener {
     fun onParkourStart(event: ParkourStartEvent) {
         val parkour = event.parkour
         val player = event.player
-        val data = Instance.plugin.getPlayerData(player.uniqueId).parkourData
+        val data = player.getData().parkourData
 
         data.apply {
             this.enabled = true
@@ -80,7 +80,7 @@ object ParkourListener : Listener {
     @EventHandler
     fun onParkourLeave(event: ParkourLeaveEvent) {
         val player = event.player
-        val data = Instance.plugin.getPlayerData(player.uniqueId).parkourData
+        val data = player.getData().parkourData
 
         data.apply {
             this.enabled = false

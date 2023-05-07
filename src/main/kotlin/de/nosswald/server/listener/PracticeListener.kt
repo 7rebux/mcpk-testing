@@ -5,8 +5,8 @@ import de.nosswald.api.events.PracticeEnableEvent
 import de.nosswald.api.utils.TickTimeFormatter
 import de.nosswald.api.utils.facing
 import de.nosswald.api.utils.hasMoved
-import de.nosswald.server.Instance
 import de.nosswald.server.utils.MessageTemplate
+import de.nosswald.server.utils.getData
 import de.nosswald.server.utils.sendActionBar
 import de.nosswald.server.utils.sendTemplate
 import org.bukkit.ChatColor
@@ -19,7 +19,7 @@ object PracticeListener : Listener {
     @EventHandler
     fun onPlayerMove(event: PlayerMoveEvent) {
         val player = event.player
-        val data = Instance.plugin.getPlayerData(player.uniqueId).practiceData
+        val data = player.getData().practiceData
 
         if (!data.enabled) return
 
@@ -27,7 +27,7 @@ object PracticeListener : Listener {
         if (data.timer.started) data.timer.tick()
 
         // only show timer if not in parkour mode
-        if (!Instance.plugin.getPlayerData(player.uniqueId).parkourData.enabled) {
+        if (!player.getData().parkourData.enabled) {
             TickTimeFormatter.format(data.timer.ticks).let { (time, unit) ->
                 event.player.sendActionBar("${ChatColor.YELLOW}$time ${unit.toString().lowercase()}")
             }
@@ -37,7 +37,7 @@ object PracticeListener : Listener {
     @EventHandler
     fun onPracticeEnable(event: PracticeEnableEvent) {
         val player = event.player
-        val data = Instance.plugin.getPlayerData(player.uniqueId).practiceData
+        val data = player.getData().practiceData
 
         data.apply {
             this.enabled = true
@@ -61,7 +61,7 @@ object PracticeListener : Listener {
     fun onPracticeDisable(event: PracticeDisableEvent) {
         val (time, unit) = TickTimeFormatter.format(event.ticks)
         val player = event.player
-        val data = Instance.plugin.getPlayerData(player.uniqueId).practiceData
+        val data = player.getData().practiceData
 
         player.teleport(data.location)
 

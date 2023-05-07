@@ -1,11 +1,16 @@
 package de.nosswald.server.utils
 
+import de.nosswald.server.Instance
 import de.nosswald.server.config.MessagesConfig
 import net.minecraft.server.v1_8_R3.IChatBaseComponent
 import net.minecraft.server.v1_8_R3.PacketPlayOutChat
 import org.bukkit.command.CommandSender
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
+
+fun Player.getData() = Instance.plugin.activePlayers.find {
+    it.playerId == this.uniqueId
+} ?: error("Player data not found for ${this.name}")
 
 data class MessageTemplate(
     val path: String,

@@ -14,7 +14,7 @@ data class PlayerData(val playerId: UUID) {
         var location: Location? = null,
         var timer: TickCounter = TickCounter(),
         val config: Map<String, Any> = mapOf(
-            "resetHeight" to 70,
+            "resetHeight" to 0,
         )
     )
 

@@ -3,9 +3,9 @@ package de.nosswald.server.commands
 import de.nosswald.api.Parkour
 import de.nosswald.api.events.ParkourLeaveEvent
 import de.nosswald.api.events.ParkourStartEvent
-import de.nosswald.server.Instance
 import de.nosswald.server.ParkourManager
 import de.nosswald.server.utils.MessageTemplate
+import de.nosswald.server.utils.getData
 import de.nosswald.server.utils.sendTemplate
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -38,7 +38,7 @@ object ParkourCommand : ICommand {
             "leave" -> { // parkour leave
                 if (sender !is Player) return sender.onlyPlayers()
 
-                if (Instance.plugin.getPlayerData(sender.uniqueId).parkourData.enabled)
+                if (sender.getData().parkourData.enabled)
                     Bukkit.getServer().pluginManager.callEvent(ParkourLeaveEvent(sender))
                 else
                     sender.sendTemplate(MessageTemplate("commands.parkour.noParkour"))
